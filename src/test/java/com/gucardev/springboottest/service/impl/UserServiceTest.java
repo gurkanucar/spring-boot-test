@@ -40,6 +40,7 @@ class UserServiceTest extends UserServiceTestSupport {
   void setUp() {
     MockitoAnnotations.openMocks(this);
     userService = new UserServiceImpl(userRepository, userConverter);
+    // userService = Mockito.spy(new UserServiceImpl(userRepository, userConverter));
     super.setupTestData();
   }
 
@@ -74,6 +75,19 @@ class UserServiceTest extends UserServiceTestSupport {
     when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
     assertThrows(RuntimeException.class, () -> userService.getById(nonExistentId));
+  }
+
+  @Test
+  void getByIdDTOTest() {
+    // doReturn(userDto1).when(userService).getByIdDTO(any()); // if you use spy, you can comment
+    // code below and uncomment this. Because getByIdDTO is a another method inside in test class
+    when(userRepository.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
+
+    when(userConverter.mapToDTO(existingUser)).thenReturn(userDto1);
+
+    UserDTO result = userService.getByIdDTO(existingUser.getId());
+
+    assertEquals(userDto1, result);
   }
 
   @Test
@@ -136,16 +150,6 @@ class UserServiceTest extends UserServiceTestSupport {
 
     assertThrows(RuntimeException.class, () -> userService.delete(nonExistentId));
     verify(userRepository, never()).deleteById(nonExistentId);
-  }
-
-  @Test
-  void getByIdDTOTest() {
-    when(userRepository.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
-    when(userConverter.mapToDTO(existingUser)).thenReturn(userDto1);
-
-    UserDTO result = userService.getByIdDTO(existingUser.getId());
-
-    assertEquals(userDto1, result);
   }
 
   @Test
