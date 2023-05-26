@@ -11,8 +11,11 @@ import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.converter.UserConverter;
 import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.model.User;
+import com.gucardev.springboottest.model.projection.MailUserNameProjection;
+import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
 import com.gucardev.springboottest.repository.UserRepository;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-public class UserServiceTest extends UserServiceTestSupport {
+class UserServiceTest extends UserServiceTestSupport {
 
   @Mock private UserRepository userRepository;
 
@@ -133,5 +136,49 @@ public class UserServiceTest extends UserServiceTestSupport {
 
     assertThrows(RuntimeException.class, () -> userService.delete(nonExistentId));
     verify(userRepository, never()).deleteById(nonExistentId);
+  }
+
+  @Test
+  void getByIdDTOTest() {
+    when(userRepository.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
+    when(userConverter.mapToDTO(existingUser)).thenReturn(userDto1);
+
+    UserDTO result = userService.getByIdDTO(existingUser.getId());
+
+    assertEquals(userDto1, result);
+  }
+
+  @Test
+  void getUserNamesListWithLengthGreaterThanTest() {
+    int length = 8;
+    List<UsernameLengthProjection> expectedList =
+        Arrays.asList(
+            getUsernameLengthProjection(
+                user1.getId(), user1.getUsername(), user1.getEmail(), user1.getUsername().length()),
+            getUsernameLengthProjection(
+                user2.getId(),
+                user2.getUsername(),
+                user2.getEmail(),
+                user2.getUsername().length()));
+
+    when(userRepository.getUserNamesListWithLengthGreaterThan(length)).thenReturn(expectedList);
+
+    List<UsernameLengthProjection> result =
+        userService.getUserNamesListWithLengthGreaterThan(length);
+
+    assertEquals(expectedList, result);
+  }
+
+  @Test
+  void getMailAndUsernamesTest() {
+    List<MailUserNameProjection> expectedList =
+        Arrays.asList(
+            getMailUsernameProjection(user1.getEmail(), user1.getUsername()),
+            getMailUsernameProjection(user2.getEmail(), user2.getUsername()));
+    when(userRepository.findAllMailAndUserName()).thenReturn(expectedList);
+
+    List<MailUserNameProjection> result = userService.getMailAndUsernames();
+
+    assertEquals(expectedList, result);
   }
 }
