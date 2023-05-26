@@ -4,9 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.gucardev.springboottest.dto.PageWrapper;
 import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.converter.UserConverter;
 import com.gucardev.springboottest.dto.request.UserRequest;
@@ -16,6 +18,7 @@ import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
 import com.gucardev.springboottest.remote.RemoteUserClient;
 import com.gucardev.springboottest.repository.UserRepository;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -190,5 +193,21 @@ class UserServiceTest extends UserServiceTestSupport {
     List<MailUserNameProjection> result = userService.getMailAndUsernames();
 
     assertEquals(expectedList, result);
+  }
+
+  @Test
+  void getDifferentUsers_givenUsernamesList_returnDifferentUsers() {
+    PageWrapper<UserDTO> userDTOPage = new PageWrapper();
+    userDTOPage.setContent(Arrays.asList(userDto1, userDto2));
+    when(userClient.getUsers()).thenReturn(userDTOPage);
+    when(userRepository.findUsersNotInUsernameList(any()))
+        .thenReturn(Collections.singletonList(user3));
+
+    when(userConverter.mapToDTO(user3)).thenReturn(userDto3);
+
+    List<UserDTO> differentUsers = userService.getDifferentUsers();
+    assertEquals(1, differentUsers.size());
+    assertEquals(userDto3, differentUsers.get(0));
+    verify(userConverter, times(differentUsers.size())).mapToDTO(any(User.class));
   }
 }
