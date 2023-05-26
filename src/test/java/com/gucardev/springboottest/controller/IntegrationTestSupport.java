@@ -42,7 +42,7 @@ public class IntegrationTestSupport {
   @Autowired protected UserRepository userRepository;
 
   @BeforeEach
-  void setUpWireMockServer() throws Exception {
+  void setupBeforeEach() throws Exception {
 
     for (int i = 0; i < 5; i++) {
       UserRequest userRequest =
