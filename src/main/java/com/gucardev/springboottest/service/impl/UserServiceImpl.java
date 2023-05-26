@@ -1,8 +1,5 @@
 package com.gucardev.springboottest.service.impl;
 
-import static com.gucardev.springboottest.dto.converter.UserConverter.mapToDTO;
-import static com.gucardev.springboottest.dto.converter.UserConverter.mapToEntity;
-
 import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.converter.UserConverter;
 import com.gucardev.springboottest.dto.request.UserRequest;
@@ -17,16 +14,18 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
+  private final UserConverter userConverter;
 
-  public UserServiceImpl(UserRepository userRepository) {
+  public UserServiceImpl(UserRepository userRepository, UserConverter userConverter) {
     this.userRepository = userRepository;
+    this.userConverter = userConverter;
   }
 
   /* TODO add pagination */
   @Override
   public List<UserDTO> findAll() {
     List<User> users = userRepository.findAll();
-    return users.stream().map(UserConverter::mapToDTO).collect(Collectors.toList());
+    return users.stream().map(userConverter::mapToDTO).collect(Collectors.toList());
   }
 
   @Override
@@ -36,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO getByIdDTO(Long id) {
-    return mapToDTO(getById(id));
+    return userConverter.mapToDTO(getById(id));
   }
 
   @Override
@@ -44,8 +43,8 @@ public class UserServiceImpl implements UserService {
     if (userRepository.existsByUsernameIgnoreCase(userRequest.getUsername())) {
       throw new RuntimeException("user already exists!");
     }
-    User saved = userRepository.save(mapToEntity(userRequest));
-    return mapToDTO(saved);
+    User saved = userRepository.save(userConverter.mapToEntity(userRequest));
+    return userConverter.mapToDTO(saved);
   }
 
   @Override
@@ -56,8 +55,8 @@ public class UserServiceImpl implements UserService {
     User existing = getById(userRequest.getId());
     existing.setEmail(userRequest.getEmail());
     existing.setName(userRequest.getName());
-    User saved = userRepository.save(mapToEntity(userRequest));
-    return mapToDTO(saved);
+    User saved = userRepository.save(userConverter.mapToEntity(userRequest));
+    return userConverter.mapToDTO(saved);
   }
 
   @Override
