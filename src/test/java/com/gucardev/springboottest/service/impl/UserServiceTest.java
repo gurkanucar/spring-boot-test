@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -45,7 +46,8 @@ class UserServiceTest extends UserServiceTestSupport {
   }
 
   @Test
-  void findAllTest() {
+  @DisplayName("findAll returns all users with pagination")
+  void findAll_givenPageable_returnUsers() {
     Page<User> usersPage = new PageImpl<>(Arrays.asList(user1, user2));
 
     when(userRepository.findAll(any(Specification.class), any(Pageable.class)))
@@ -61,7 +63,7 @@ class UserServiceTest extends UserServiceTestSupport {
   }
 
   @Test
-  void getByIdTest() {
+  void getById_givenExistingId_returnUser() {
     when(userRepository.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
     User result = userService.getById(existingUser.getId());
@@ -70,7 +72,7 @@ class UserServiceTest extends UserServiceTestSupport {
   }
 
   @Test
-  void getByIdNotFoundTest() {
+  void getById_givenNonExistentId_throwException() {
     Long nonExistentId = 100L;
     when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
@@ -78,7 +80,7 @@ class UserServiceTest extends UserServiceTestSupport {
   }
 
   @Test
-  void getByIdDTOTest() {
+  void getByIdDTO_givenExistingId_returnUserDTO() {
     // doReturn(userDto1).when(userService).getByIdDTO(any()); // if you use spy, you can comment
     // code below and uncomment this. Because getByIdDTO is a another method inside in test class
     when(userRepository.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
@@ -91,7 +93,7 @@ class UserServiceTest extends UserServiceTestSupport {
   }
 
   @Test
-  void createTest() {
+  void create_givenNewUser_returnCreatedUser() {
     when(userRepository.existsByUsernameIgnoreCase(userRequest.getUsername())).thenReturn(false);
     when(userConverter.mapToEntity(userRequest)).thenReturn(user1);
     when(userRepository.save(user1)).thenReturn(user1);
@@ -103,14 +105,14 @@ class UserServiceTest extends UserServiceTestSupport {
   }
 
   @Test
-  void createWithExistingUsernameTest() {
+  void create_givenExistingUsername_throwException() {
     when(userRepository.existsByUsernameIgnoreCase(userRequest.getUsername())).thenReturn(true);
 
     assertThrows(RuntimeException.class, () -> userService.create(userRequest));
   }
 
   @Test
-  void updateTest() {
+  void update_givenExistingUser_returnUpdatedUser() {
     when(userRepository.existsById(userRequest.getId())).thenReturn(true);
     when(userRepository.findById(userRequest.getId())).thenReturn(Optional.of(existingUser));
     when(userConverter.mapToEntity(userRequest)).thenReturn(updatedUser);
@@ -123,7 +125,7 @@ class UserServiceTest extends UserServiceTestSupport {
   }
 
   @Test
-  void updateNotFoundTest() {
+  void update_givenNonExistentUser_throwException() {
     Long nonExistentId = 100L;
     UserRequest nonExistentUserRequest =
         createUserRequest(
@@ -135,7 +137,7 @@ class UserServiceTest extends UserServiceTestSupport {
   }
 
   @Test
-  void deleteTest() {
+  void delete_givenExistingUser_removeUser() {
     when(userRepository.existsById(existingUser.getId())).thenReturn(true);
 
     userService.delete(existingUser.getId());
@@ -144,7 +146,7 @@ class UserServiceTest extends UserServiceTestSupport {
   }
 
   @Test
-  void deleteNotFoundTest() {
+  void delete_givenNonExistentUser_throwException() {
     Long nonExistentId = 100L;
     when(userRepository.existsById(nonExistentId)).thenReturn(false);
 
@@ -153,7 +155,7 @@ class UserServiceTest extends UserServiceTestSupport {
   }
 
   @Test
-  void getUserNamesListWithLengthGreaterThanTest() {
+  void getUserNamesListWithLengthGreaterThan_givenLength_returnUsernames() {
     int length = 8;
     List<UsernameLengthProjection> expectedList =
         Arrays.asList(
@@ -174,7 +176,7 @@ class UserServiceTest extends UserServiceTestSupport {
   }
 
   @Test
-  void getMailAndUsernamesTest() {
+  void getMailAndUsernames_givenNoCondition_returnMailAndUsernames() {
     List<MailUserNameProjection> expectedList =
         Arrays.asList(
             getMailUsernameProjection(user1.getEmail(), user1.getUsername()),

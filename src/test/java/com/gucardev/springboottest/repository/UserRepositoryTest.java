@@ -63,7 +63,7 @@ class UserRepositoryTest {
   }
 
   @Test
-  void testSearchByKeyword() {
+  void searchByKeyword_givenKeyword_returnMatchingUsers() {
     Specification<User> spec = UserSpecifications.searchByKeyword("user1");
     Pageable pageable = PageRequest.of(0, 10);
 
@@ -75,7 +75,7 @@ class UserRepositoryTest {
 
   @ParameterizedTest
   @CsvSource({"asc,0,3", "desc, 3,0"})
-  void testSortByField(String sortDir, int order1, int order2) {
+  void sortByField_givenSortDirectionAndField_returnSortedUsers(String sortDir, int order1, int order2) {
     Sort.Direction direction = Sort.Direction.fromString(sortDir.toUpperCase());
 
     Specification<User> spec = UserSpecifications.sortByField("username", direction);
@@ -89,31 +89,31 @@ class UserRepositoryTest {
   }
 
   @Test
-  void whenExistsByUsernameIgnoreCase_thenReturnTrue() {
+  void existsByUsernameIgnoreCase_givenExistingUsername_returnTrue() {
     boolean exists = userRepository.existsByUsernameIgnoreCase(user1.getUsername());
     assertTrue(exists);
   }
 
   @Test
-  void whenExistsByUsernameIgnoreCase_thenReturnFalse() {
+  void existsByUsernameIgnoreCase_givenNonExistingUsername_returnFalse() {
     boolean exists = userRepository.existsByUsernameIgnoreCase("non-existing-username");
     assertFalse(exists);
   }
 
   @Test
-  void whenExistsById_thenReturnTrue() {
+  void existsById_givenExistingId_returnTrue() {
     boolean exists = userRepository.existsById(user1.getId());
     assertTrue(exists);
   }
 
   @Test
-  void whenExistsById_thenReturnFalse() {
+  void existsById_givenNonExistingId_returnFalse() {
     boolean exists = userRepository.existsById(-1L);
     assertFalse(exists);
   }
 
   @Test
-  void getUserNamesListWithLengthGreaterThan() {
+  void getUserNamesListWithLengthGreaterThan_givenLength_returnUsernamesWithLengthGreaterThan() {
     List<UsernameLengthProjection> users = userRepository.getUserNamesListWithLengthGreaterThan(8);
 
     assertEquals(3, users.size());
@@ -123,7 +123,7 @@ class UserRepositoryTest {
   }
 
   @Test
-  void findAllMailAndUserName() {
+  void findAllMailAndUserName_givenNoCondition_returnMailAndUsernames() {
     List<MailUserNameProjection> users = userRepository.findAllMailAndUserName();
 
     assertEquals(4, users.size());
