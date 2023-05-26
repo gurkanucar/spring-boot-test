@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     User existing = getById(userRequest.getId());
     existing.setEmail(userRequest.getEmail());
     existing.setName(userRequest.getName());
-    User saved = userRepository.save(userConverter.mapToEntity(userRequest));
+    User saved = userRepository.save(existing);
     return userConverter.mapToDTO(saved);
   }
 
