@@ -8,7 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.gucardev.springboottest.dto.PageWrapper;
+import com.gucardev.springboottest.dto.RestResponsePage;
 import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.converter.UserConverter;
 import com.gucardev.springboottest.dto.request.UserRequest;
@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -120,15 +121,26 @@ class UserServiceTest extends UserServiceTestSupport {
 
   @Test
   void update_givenExistingUser_returnUpdatedUser() {
-    when(userRepository.existsById(userRequest.getId())).thenReturn(true);
-    when(userRepository.findById(userRequest.getId())).thenReturn(Optional.of(existingUser));
-    when(userConverter.mapToEntity(userRequest)).thenReturn(updatedUser);
-    when(userRepository.save(updatedUser)).thenReturn(updatedUser);
+    UserRequest userRequest =
+        UserRequest.builder()
+            .id(user1.getId())
+            .username("username_will_not_update")
+            .name("Updated User")
+            .email("updated@test.com")
+            .build();
+    User updatedUser = new User();
+    updatedUser.setEmail(userRequest.getEmail());
+    updatedUser.setName(userRequest.getName());
+    UserDTO updatedUserDto = new UserDTO();
+    BeanUtils.copyProperties(updatedUser, updatedUserDto);
+
+    when(userRepository.existsById(any())).thenReturn(true);
+    when(userRepository.findById(any())).thenReturn(Optional.of(user1));
+    when(userRepository.save(any())).thenReturn(updatedUser);
     when(userConverter.mapToDTO(updatedUser)).thenReturn(updatedUserDto);
 
-    UserDTO result = userService.update(userRequest);
-
-    assertEquals(updatedUserDto, result);
+    UserDTO actual = userService.update(userRequest);
+    assertEquals(updatedUserDto, actual);
   }
 
   @Test
@@ -197,8 +209,8 @@ class UserServiceTest extends UserServiceTestSupport {
 
   @Test
   void getDifferentUsers_givenUsernamesList_returnDifferentUsers() {
-    PageWrapper<UserDTO> userDTOPage = new PageWrapper();
-    userDTOPage.setContent(Arrays.asList(userDto1, userDto2));
+    RestResponsePage<UserDTO> userDTOPage =
+        new RestResponsePage<>(Arrays.asList(userDto1, userDto2));
     when(userClient.getUsers()).thenReturn(userDTOPage);
     when(userRepository.findUsersNotInUsernameList(any()))
         .thenReturn(Collections.singletonList(user3));

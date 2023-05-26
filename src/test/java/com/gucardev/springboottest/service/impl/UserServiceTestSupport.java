@@ -22,7 +22,7 @@ public class UserServiceTestSupport {
 
     existingUser = createUser("Existing User", "existing@test.com", "existingUser");
     existingUser.setId(1L);
-    updatedUser = createUser("Updated User", "updated@test.com", "updatedUser");
+    updatedUser = createUser("Updated User", "updated@test.com", user1.getUsername());
     updatedUserDto =
         createUserDto(
             updatedUser.getId(),
