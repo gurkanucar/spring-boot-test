@@ -1,20 +1,20 @@
-## issues:
+## issues while testing:
 
-- public/private/protected methods
-- static methods
+- public/private/protected methods test?
+- static methods test?
 - cron jobs
 - interface (dao) / service interface
 - repository
 - entity/dto converter
-- filter/pagination/sorting specification
-
+- filter/pagination/sorting specification tests
+- wiremock
 
 ### test method name format
+
 - **method_given_expected**
 - create_givenNewUser_returnCreatedUser
 - getById_givenNonExistentId_throwException
 - findAllMailAndUserName_givenNoCondition_returnMailAndUsernames
-
 
 resources:
 
@@ -23,3 +23,5 @@ https://medium.com/free-code-camp/unit-testing-services-endpoints-and-repositori
 https://betulsahinn.medium.com/spring-boot-ile-unit-test-yazmak-f1e4fc1f3df
 https://github.com/folksdev/movie-api
 https://vladmihalcea.com/spring-jpa-dto-projection/
+https://medium.com/cuddle-ai/testing-spring-boot-application-using-wiremock-and-junit-5-d514a47ab931
+https://www.geeksforgeeks.org/how-to-use-wiremock-with-junit-test/
