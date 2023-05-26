@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpecifications {
 
-  public static Specification<User> searchByKeyword(String searchTerm, Long userId) {
+  public static Specification<User> searchByKeyword(String searchTerm) {
     return (root, query, criteriaBuilder) -> {
       List<Predicate> predicates = new ArrayList<>();
 
@@ -20,12 +20,13 @@ public class UserSpecifications {
             criteriaBuilder.or(
                 criteriaBuilder.like(criteriaBuilder.lower(root.get("username")), likeTerm),
                 criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), likeTerm),
-                criteriaBuilder.like(criteriaBuilder.lower(root.get("mail")), likeTerm)));
+                criteriaBuilder.like(criteriaBuilder.lower(root.get("email")), likeTerm)));
       }
 
-      if (userId != null) {
-        predicates.add(criteriaBuilder.notEqual(root.get("id"), userId));
-      }
+      // filter itself
+      //      if (userId != null) {
+      //        predicates.add(criteriaBuilder.notEqual(root.get("id"), userId));
+      //      }
 
       return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     };
@@ -45,11 +46,11 @@ public class UserSpecifications {
         } else {
           query.orderBy(criteriaBuilder.desc(root.get("username")));
         }
-      } else if (sortField.equals("mail")) {
+      } else if (sortField.equals("email")) {
         if (sortDirection.isAscending()) {
-          query.orderBy(criteriaBuilder.asc(root.get("mail")));
+          query.orderBy(criteriaBuilder.asc(root.get("email")));
         } else {
-          query.orderBy(criteriaBuilder.desc(root.get("mail")));
+          query.orderBy(criteriaBuilder.desc(root.get("email")));
         }
       }
 
