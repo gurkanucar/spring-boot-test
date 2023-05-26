@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 class UserControllerIntegrationTest extends IntegrationTestSupport {
 
   @Test
-  void searchUsers() throws Exception {
+  void searchUsers_givenSortFieldAndSortDirection_returnsUsers() throws Exception {
     MvcResult mvcResult =
         mockMvc
             .perform(
@@ -36,7 +36,7 @@ class UserControllerIntegrationTest extends IntegrationTestSupport {
   }
 
   @Test
-  void getById() throws Exception {
+  void getById_givenUserId_returnsUser() throws Exception {
     long userId = 1L;
     MvcResult mvcResult =
         mockMvc
@@ -52,7 +52,7 @@ class UserControllerIntegrationTest extends IntegrationTestSupport {
   }
 
   @Test
-  void createUser() throws Exception {
+  void createUser_givenUserRequest_createsUser() throws Exception {
     UserRequest userRequest =
         UserRequest.builder()
             .id(1L)
@@ -76,7 +76,7 @@ class UserControllerIntegrationTest extends IntegrationTestSupport {
   }
 
   @Test
-  void updateUser() throws Exception {
+  void updateUser_givenUserRequest_updatesUser() throws Exception {
 
     UserRequest userRequest =
         UserRequest.builder()
@@ -103,7 +103,7 @@ class UserControllerIntegrationTest extends IntegrationTestSupport {
   }
 
   @Test
-  void deleteById() throws Exception {
+  void deleteById_givenUserId_deletesUser() throws Exception {
     long userId = 1L;
     mockMvc
         .perform(
@@ -112,7 +112,7 @@ class UserControllerIntegrationTest extends IntegrationTestSupport {
   }
 
   @Test
-  void differentUsers() throws Exception {
+  void differentUsers_returnsMultipleUsers() throws Exception {
     MvcResult mvcResult =
         mockMvc
             .perform(
@@ -127,7 +127,7 @@ class UserControllerIntegrationTest extends IntegrationTestSupport {
   }
 
   @Test
-  void getMailAndUsernames() throws Exception {
+  void getMailAndUsernames_returnsMailAndUsernames() throws Exception {
     MvcResult mvcResult =
         mockMvc
             .perform(
@@ -138,7 +138,7 @@ class UserControllerIntegrationTest extends IntegrationTestSupport {
   }
 
   @Test
-  void getUsernameLength() throws Exception {
+  void getUsernameLength_givenLength_returnsUsernamesWithLength() throws Exception {
     int length = 5;
     MvcResult mvcResult =
         mockMvc

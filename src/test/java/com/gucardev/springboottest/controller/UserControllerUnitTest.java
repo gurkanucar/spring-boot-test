@@ -27,12 +27,12 @@ class UserControllerUnitTest {
 
   @BeforeEach
   public void setup() {
-   // MockitoAnnotations.openMocks(this); // or use class annotation
+    // MockitoAnnotations.openMocks(this); // or use class annotation
     userController = new UserController(userService);
   }
 
   @Test
-  void testSearchUsers() {
+  void searchUsers_givenSortFieldAndSortDirection_returnsUsers() {
     Pageable pageable = PageRequest.of(0, 20);
     Page<UserDTO> userDTOPage = Page.empty(pageable);
     when(userService.findAll(any(), any(), any(), any())).thenReturn(userDTOPage);
@@ -43,7 +43,7 @@ class UserControllerUnitTest {
   }
 
   @Test
-  void testGetById() {
+  void getById_givenUserId_returnsUser() {
     UserDTO userDTO = new UserDTO();
     when(userService.getByIdDTO(anyLong())).thenReturn(userDTO);
     ResponseEntity<UserDTO> response = userController.getById(1L);
@@ -52,7 +52,7 @@ class UserControllerUnitTest {
   }
 
   @Test
-  void createUser() {
+  void createUser_givenUserRequest_createsUser() {
     UserDTO userDTO = new UserDTO();
     when(userService.create(any())).thenReturn(userDTO);
     ResponseEntity<UserDTO> response = userController.createUser(any());
@@ -61,7 +61,7 @@ class UserControllerUnitTest {
   }
 
   @Test
-  void updateUser() {
+  void updateUser_givenUserRequest_updatesUser() {
     UserDTO userDTO = new UserDTO();
     when(userService.update(any())).thenReturn(userDTO);
     ResponseEntity<UserDTO> response = userController.updateUser(any(UserRequest.class));
