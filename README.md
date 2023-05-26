@@ -146,8 +146,6 @@ class UserRepositoryTest {
 
 ```java
 
-
-
 WireMockServer wireMockServer=new WireMockServer(3000);
 
 @BeforeEach
@@ -235,6 +233,25 @@ WireMockServer wireMockServer=new WireMockServer(3000);
       Set<ConstraintViolation<UserRequest>>violations=validator.validate(userRequest);
     assertEquals(hasViolations,!violations.isEmpty());
     }
+```
+
+### Example dto converter unit tests
+
+```java
+  @Test
+  void mapToEntityTest(){
+      UserRequest userRequest=new UserRequest();
+      userRequest.setUsername("username");
+      userRequest.setEmail("email@test.com");
+      userRequest.setName("Test User");
+
+      User user=userConverter.mapToEntity(userRequest);
+
+      assertEquals(userRequest.getUsername(),user.getUsername());
+      assertEquals(userRequest.getEmail(),user.getEmail());
+      assertEquals(userRequest.getName(),user.getName());
+      }
+
 ```
 
 ## resources:

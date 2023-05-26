@@ -6,7 +6,7 @@ import com.gucardev.springboottest.model.User;
 import com.gucardev.springboottest.model.projection.MailUserNameProjection;
 import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
 
-public class UserServiceTestSupport {
+public abstract class UserServiceTestSupport {
 
   protected User user1, user2, user3, existingUser, updatedUser;
   protected UserDTO userDto1, userDto2, userDto3, updatedUserDto;
