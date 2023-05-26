@@ -2,6 +2,7 @@ package com.gucardev.springboottest.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,12 +13,17 @@ import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.model.User;
 import com.gucardev.springboottest.repository.UserRepository;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 public class UserServiceTest extends UserServiceTestSupport {
 
@@ -36,13 +42,18 @@ public class UserServiceTest extends UserServiceTestSupport {
 
   @Test
   void findAllTest() {
-    when(userRepository.findAll()).thenReturn(Arrays.asList(user1, user2));
+    Page<User> usersPage = new PageImpl<>(Arrays.asList(user1, user2));
+
+    when(userRepository.findAll(any(Specification.class), any(Pageable.class)))
+        .thenReturn(usersPage);
     when(userConverter.mapToDTO(user1)).thenReturn(userDto1);
     when(userConverter.mapToDTO(user2)).thenReturn(userDto2);
 
-    List<UserDTO> result = userService.findAll();
+    Pageable pageable = PageRequest.of(0, 5);
+    Page<UserDTO> result = userService.findAll("", "name", Sort.Direction.ASC, pageable);
 
-    assertEquals(2, result.size());
+    assertEquals(2, result.getTotalElements());
+    assertEquals(1, result.getTotalPages());
   }
 
   @Test
