@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @Entity
-@Table(name = "`user`")
+@Table(name = "user_table")
 public class User extends BaseEntity {
 
   @Column(unique = true)
