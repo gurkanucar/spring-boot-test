@@ -3,8 +3,11 @@ package com.gucardev.springboottest.controller;
 import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.service.UserService;
-import java.util.List;
 import javax.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,8 +31,14 @@ public class UserController {
   }
 
   @GetMapping
-  public ResponseEntity<List<UserDTO>> getAllUsersDTO() {
-    return ResponseEntity.ok(userService.findAll());
+  public ResponseEntity<Page<UserDTO>> searchUsers(
+      @RequestParam(required = false) String searchTerm,
+      @RequestParam(defaultValue = "name") String sortField,
+      @RequestParam(defaultValue = "ASC") String sortDirection,
+      @PageableDefault(size = 20) Pageable pageable) {
+    Sort.Direction direction = Sort.Direction.fromString(sortDirection.toUpperCase());
+    Page<UserDTO> result = userService.findAll(searchTerm, sortField, direction, pageable);
+    return ResponseEntity.ok(result);
   }
 
   @GetMapping("/{id}")

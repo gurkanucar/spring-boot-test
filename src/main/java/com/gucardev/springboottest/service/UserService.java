@@ -3,11 +3,14 @@ package com.gucardev.springboottest.service;
 import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.model.User;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 public interface UserService {
 
-  List<UserDTO> findAll();
+  Page<UserDTO> findAll(
+      String searchTerm, String sortField, Sort.Direction sortDirection, Pageable pageable);
 
   User getById(Long id);
 

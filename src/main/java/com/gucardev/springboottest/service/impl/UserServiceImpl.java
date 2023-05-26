@@ -6,8 +6,11 @@ import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.model.User;
 import com.gucardev.springboottest.repository.UserRepository;
 import com.gucardev.springboottest.service.UserService;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.gucardev.springboottest.spesification.UserSpecifications;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,11 +24,13 @@ public class UserServiceImpl implements UserService {
     this.userConverter = userConverter;
   }
 
-  /* TODO add pagination */
   @Override
-  public List<UserDTO> findAll() {
-    List<User> users = userRepository.findAll();
-    return users.stream().map(userConverter::mapToDTO).collect(Collectors.toList());
+  public Page<UserDTO> findAll(
+      String searchTerm, String sortField, Sort.Direction sortDirection, Pageable pageable) {
+    Specification<User> spec =
+        Specification.where(UserSpecifications.searchByKeyword(searchTerm))
+            .and(UserSpecifications.sortByField(sortField, sortDirection));
+    return userRepository.findAll(spec, pageable).map(userConverter::mapToDTO);
   }
 
   @Override
