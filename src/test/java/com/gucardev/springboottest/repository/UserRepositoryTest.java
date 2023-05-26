@@ -5,7 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.gucardev.springboottest.model.User;
+import com.gucardev.springboottest.model.projection.MailUserNameProjection;
+import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
 import com.gucardev.springboottest.spesification.UserSpecifications;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,7 +36,7 @@ class UserRepositoryTest {
   @BeforeEach
   public void setup() {
     user1 = new User();
-    user1.setUsername("username1");
+    user1.setUsername("user1");
     user1.setName("name1");
     user1.setEmail("email1@test.com");
 
@@ -61,13 +64,13 @@ class UserRepositoryTest {
 
   @Test
   void testSearchByKeyword() {
-    Specification<User> spec = UserSpecifications.searchByKeyword("username1");
+    Specification<User> spec = UserSpecifications.searchByKeyword("user1");
     Pageable pageable = PageRequest.of(0, 10);
 
     Page<User> users = userRepository.findAll(spec, pageable);
 
     assertEquals(1, users.getContent().size());
-    assertEquals("username1", users.getContent().get(0).getUsername());
+    assertEquals("user1", users.getContent().get(0).getUsername());
   }
 
   @ParameterizedTest
@@ -81,7 +84,7 @@ class UserRepositoryTest {
     Page<User> users = userRepository.findAll(spec, pageable);
 
     assertEquals(4, users.getContent().size());
-    assertEquals("username1", users.getContent().get(order1).getUsername());
+    assertEquals("user1", users.getContent().get(order1).getUsername());
     assertEquals("username4", users.getContent().get(order2).getUsername());
   }
 
@@ -107,5 +110,34 @@ class UserRepositoryTest {
   void whenExistsById_thenReturnFalse() {
     boolean exists = userRepository.existsById(-1L);
     assertFalse(exists);
+  }
+
+  @Test
+  void getUserNamesListWithLengthGreaterThan() {
+    List<UsernameLengthProjection> users = userRepository.getUserNamesListWithLengthGreaterThan(8);
+
+    assertEquals(3, users.size());
+    assertEquals("username2", users.get(0).getUsername());
+    assertEquals("username3", users.get(1).getUsername());
+    assertEquals("username4", users.get(2).getUsername());
+  }
+
+  @Test
+  void findAllMailAndUserName() {
+    List<MailUserNameProjection> users = userRepository.findAllMailAndUserName();
+
+    assertEquals(4, users.size());
+
+    assertEquals("email1@test.com", users.get(0).getEmail());
+    assertEquals("user1", users.get(0).getUsername());
+
+    assertEquals("email2@test.com", users.get(1).getEmail());
+    assertEquals("username2", users.get(1).getUsername());
+
+    assertEquals("email3@test.com", users.get(2).getEmail());
+    assertEquals("username3", users.get(2).getUsername());
+
+    assertEquals("email4@test.com", users.get(3).getEmail());
+    assertEquals("username4", users.get(3).getUsername());
   }
 }
