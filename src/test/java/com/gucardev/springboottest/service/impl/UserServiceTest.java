@@ -24,9 +24,11 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -35,6 +37,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest extends UserServiceTestSupport {
 
   @Mock private UserRepository userRepository;
@@ -47,7 +50,7 @@ class UserServiceTest extends UserServiceTestSupport {
 
   @BeforeEach
   void setUp() {
-    MockitoAnnotations.openMocks(this);
+    // MockitoAnnotations.openMocks(this); // or use class annotation
     userService = new UserServiceImpl(userRepository, userConverter, userClient);
     // userService = Mockito.spy(new UserServiceImpl(userRepository, userConverter, userClient));
     super.setupTestData();

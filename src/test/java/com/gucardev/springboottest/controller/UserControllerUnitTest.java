@@ -10,14 +10,16 @@ import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+@ExtendWith(MockitoExtension.class)
 class UserControllerUnitTest {
 
   @Mock private UserService userService;
@@ -25,7 +27,7 @@ class UserControllerUnitTest {
 
   @BeforeEach
   public void setup() {
-    MockitoAnnotations.openMocks(this);
+   // MockitoAnnotations.openMocks(this); // or use class annotation
     userController = new UserController(userService);
   }
 
