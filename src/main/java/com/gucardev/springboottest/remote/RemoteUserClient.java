@@ -1,6 +1,6 @@
 package com.gucardev.springboottest.remote;
 
-import com.gucardev.springboottest.dto.PageWrapper;
+import com.gucardev.springboottest.dto.RestPageResponse;
 import com.gucardev.springboottest.dto.UserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface RemoteUserClient {
 
   @GetMapping("/user")
-  PageWrapper<UserDTO> getUsers();
+  RestPageResponse<UserDTO> getUsers();
 }

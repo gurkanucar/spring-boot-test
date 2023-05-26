@@ -8,7 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.gucardev.springboottest.dto.RestResponsePage;
+import com.gucardev.springboottest.dto.RestPageResponse;
 import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.converter.UserConverter;
 import com.gucardev.springboottest.dto.request.UserRequest;
@@ -209,8 +209,8 @@ class UserServiceTest extends UserServiceTestSupport {
 
   @Test
   void getDifferentUsers_givenUsernamesList_returnDifferentUsers() {
-    RestResponsePage<UserDTO> userDTOPage =
-        new RestResponsePage<>(Arrays.asList(userDto1, userDto2));
+    RestPageResponse<UserDTO> userDTOPage =
+        new RestPageResponse<>(Arrays.asList(userDto1, userDto2));
     when(userClient.getUsers()).thenReturn(userDTOPage);
     when(userRepository.findUsersNotInUsernameList(any()))
         .thenReturn(Collections.singletonList(user3));
