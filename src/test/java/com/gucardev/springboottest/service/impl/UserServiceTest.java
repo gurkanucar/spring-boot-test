@@ -1,35 +1,29 @@
 package com.gucardev.springboottest.service.impl;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.never;
 
 import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.converter.UserConverter;
 import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.model.User;
 import com.gucardev.springboottest.repository.UserRepository;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 public class UserServiceTest extends UserServiceTestSupport {
 
-  @Mock
-  private UserRepository userRepository;
+  @Mock private UserRepository userRepository;
 
-  @Mock
-  private UserConverter userConverter;
+  @Mock private UserConverter userConverter;
 
   private UserServiceImpl userService;
 
@@ -103,7 +97,9 @@ public class UserServiceTest extends UserServiceTestSupport {
   @Test
   void updateNotFoundTest() {
     Long nonExistentId = 100L;
-    UserRequest nonExistentUserRequest = createUserRequest(nonExistentId, "Non-Existent User", "nonexistent@test.com", "nonExistentUser");
+    UserRequest nonExistentUserRequest =
+        createUserRequest(
+            nonExistentId, "Non-Existent User", "nonexistent@test.com", "nonExistentUser");
 
     when(userRepository.existsById(nonExistentId)).thenReturn(false);
 

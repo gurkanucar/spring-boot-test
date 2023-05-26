@@ -3,7 +3,6 @@ package com.gucardev.springboottest.service.impl;
 import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.model.User;
-import org.junit.jupiter.api.BeforeEach;
 
 public class UserServiceTestSupport {
 
@@ -20,26 +19,22 @@ public class UserServiceTestSupport {
     existingUser = createUser("Existing User", "existing@test.com", "existingUser");
     existingUser.setId(1L);
     updatedUser = createUser("Updated User", "updated@test.com", "updatedUser");
-    updatedUserDto = createUserDto(updatedUser.getId(), updatedUser.getName(), updatedUser.getEmail(), updatedUser.getUsername());
+    updatedUserDto =
+        createUserDto(
+            updatedUser.getId(),
+            updatedUser.getName(),
+            updatedUser.getEmail(),
+            updatedUser.getUsername());
 
     userRequest = createUserRequest(1L, "Request User", "request@test.com", "requestUser");
   }
 
   protected User createUser(String name, String email, String username) {
-    return User.builder()
-        .name(name)
-        .email(email)
-        .username(username)
-        .build();
+    return User.builder().name(name).email(email).username(username).build();
   }
 
   protected UserDTO createUserDto(Long id, String name, String email, String username) {
-    return UserDTO.builder()
-        .id(id)
-        .name(name)
-        .email(email)
-        .username(username)
-        .build();
+    return UserDTO.builder().id(id).name(name).email(email).username(username).build();
   }
 
   protected UserRequest createUserRequest(Long id, String name, String email, String username) {
@@ -51,4 +46,3 @@ public class UserServiceTestSupport {
     return userRequest;
   }
 }
-
