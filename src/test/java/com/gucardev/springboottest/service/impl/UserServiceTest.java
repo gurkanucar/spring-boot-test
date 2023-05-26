@@ -13,6 +13,7 @@ import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.model.User;
 import com.gucardev.springboottest.model.projection.MailUserNameProjection;
 import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
+import com.gucardev.springboottest.remote.RemoteUserClient;
 import com.gucardev.springboottest.repository.UserRepository;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
@@ -35,13 +37,15 @@ class UserServiceTest extends UserServiceTestSupport {
 
   @Mock private UserConverter userConverter;
 
-  private UserServiceImpl userService;
+  @Mock private RemoteUserClient userClient;
+
+  @InjectMocks private UserServiceImpl userService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    userService = new UserServiceImpl(userRepository, userConverter);
-    // userService = Mockito.spy(new UserServiceImpl(userRepository, userConverter));
+    userService = new UserServiceImpl(userRepository, userConverter, userClient);
+    // userService = Mockito.spy(new UserServiceImpl(userRepository, userConverter, userClient));
     super.setupTestData();
   }
 

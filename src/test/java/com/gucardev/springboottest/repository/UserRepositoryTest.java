@@ -8,6 +8,7 @@ import com.gucardev.springboottest.model.User;
 import com.gucardev.springboottest.model.projection.MailUserNameProjection;
 import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
 import com.gucardev.springboottest.spesification.UserSpecifications;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,25 +36,11 @@ class UserRepositoryTest {
 
   @BeforeEach
   public void setup() {
-    user1 = new User();
-    user1.setUsername("user1");
-    user1.setName("name1");
-    user1.setEmail("email1@test.com");
 
-    user2 = new User();
-    user2.setUsername("username2");
-    user2.setName("name2");
-    user2.setEmail("email2@test.com");
-
-    user3 = new User();
-    user3.setUsername("username3");
-    user3.setName("name3");
-    user3.setEmail("email3@test.com");
-
-    user4 = new User();
-    user4.setUsername("username4");
-    user4.setName("name4");
-    user4.setEmail("email4@test.com");
+    user1 = User.builder().username("user1").name("name1").email("email1@test.com").build();
+    user2 = User.builder().username("username2").name("name2").email("email2@test.com").build();
+    user3 = User.builder().username("username3").name("name3").email("email3@test.com").build();
+    user4 = User.builder().username("username4").name("name4").email("email4@test.com").build();
 
     entityManager.persist(user1);
     entityManager.persist(user2);
@@ -75,7 +62,8 @@ class UserRepositoryTest {
 
   @ParameterizedTest
   @CsvSource({"asc,0,3", "desc, 3,0"})
-  void sortByField_givenSortDirectionAndField_returnSortedUsers(String sortDir, int order1, int order2) {
+  void sortByField_givenSortDirectionAndField_returnSortedUsers(
+      String sortDir, int order1, int order2) {
     Sort.Direction direction = Sort.Direction.fromString(sortDir.toUpperCase());
 
     Specification<User> spec = UserSpecifications.sortByField("username", direction);
@@ -139,5 +127,13 @@ class UserRepositoryTest {
 
     assertEquals("email4@test.com", users.get(3).getEmail());
     assertEquals("username4", users.get(3).getUsername());
+  }
+
+  @Test
+  void findUsersNotInUsernameList_givenUsernameList_returnNotInListUsers() {
+    List<String> sameUsernames =
+        Arrays.asList(user1.getUsername(), user2.getUsername(), user4.getUsername());
+    List<User> expected = userRepository.findUsersNotInUsernameList(sameUsernames);
+    assertEquals(1,expected.size());
   }
 }
