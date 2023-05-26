@@ -133,7 +133,7 @@ class UserRepositoryTest {
   void findUsersNotInUsernameList_givenUsernameList_returnNotInListUsers() {
     List<String> sameUsernames =
         Arrays.asList(user1.getUsername(), user2.getUsername(), user4.getUsername());
-    List<User> expected = userRepository.findUsersNotInUsernameList(sameUsernames);
-    assertEquals(1,expected.size());
+    List<User> actual = userRepository.findUsersNotInUsernameList(sameUsernames);
+    assertEquals(1,actual.size());
   }
 }
