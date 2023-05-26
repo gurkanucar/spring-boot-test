@@ -4,6 +4,7 @@ import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.model.projection.MailUserNameProjection;
 import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
+import com.gucardev.springboottest.remote.RemoteUserClient;
 import com.gucardev.springboottest.service.UserService;
 import java.util.List;
 import javax.validation.Valid;
@@ -28,16 +29,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   private final UserService userService;
+  private final RemoteUserClient remoteUserClient;
 
-  public UserController(UserService userService) {
+  public UserController(UserService userService, RemoteUserClient remoteUserClient) {
     this.userService = userService;
+    this.remoteUserClient = remoteUserClient;
   }
 
   @GetMapping
   public ResponseEntity<Page<UserDTO>> searchUsers(
       @RequestParam(required = false) String searchTerm,
-      @RequestParam(defaultValue = "name") String sortField,
-      @RequestParam(defaultValue = "ASC") String sortDirection,
+      @RequestParam(defaultValue = "name", required = false) String sortField,
+      @RequestParam(defaultValue = "ASC", required = false) String sortDirection,
       @PageableDefault(size = 20) Pageable pageable) {
     Sort.Direction direction = Sort.Direction.fromString(sortDirection.toUpperCase());
     Page<UserDTO> result = userService.findAll(searchTerm, sortField, direction, pageable);
@@ -63,6 +66,11 @@ public class UserController {
   public ResponseEntity<UserDTO> updateUser(@PathVariable Long id) {
     userService.delete(id);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/different-users")
+  public ResponseEntity<List<UserDTO>> differentUsers() {
+    return ResponseEntity.ok(userService.getDifferentUsers());
   }
 
   @GetMapping("/mail-username")

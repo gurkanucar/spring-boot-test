@@ -28,4 +28,6 @@ public interface UserService {
   List<UsernameLengthProjection> getUserNamesListWithLengthGreaterThan(Integer length);
 
   List<MailUserNameProjection> getMailAndUsernames();
+
+  List<UserDTO> getDifferentUsers();
 }

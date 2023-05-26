@@ -6,10 +6,13 @@ import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.model.User;
 import com.gucardev.springboottest.model.projection.MailUserNameProjection;
 import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
+import com.gucardev.springboottest.remote.RemoteUserClient;
 import com.gucardev.springboottest.repository.UserRepository;
 import com.gucardev.springboottest.service.UserService;
 import com.gucardev.springboottest.spesification.UserSpecifications;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,10 +24,13 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final UserConverter userConverter;
+  private final RemoteUserClient userClient;
 
-  public UserServiceImpl(UserRepository userRepository, UserConverter userConverter) {
+  public UserServiceImpl(
+      UserRepository userRepository, UserConverter userConverter, RemoteUserClient userClient) {
     this.userRepository = userRepository;
     this.userConverter = userConverter;
+    this.userClient = userClient;
   }
 
   @Override
@@ -84,4 +90,15 @@ public class UserServiceImpl implements UserService {
   public List<MailUserNameProjection> getMailAndUsernames() {
     return userRepository.findAllMailAndUserName();
   }
+
+  @Override
+  public List<UserDTO> getDifferentUsers() {
+    List<UserDTO> remoteUsers = userClient.getUsers().getContent();
+    List<User> differentUsers =
+        userRepository.findUsersNotInUsernameList(getUsername.apply(remoteUsers));
+    return differentUsers.stream().map(userConverter::mapToDTO).collect(Collectors.toList());
+  }
+
+  private final Function<List<UserDTO>, List<String>> getUsername =
+      value -> value.stream().map(UserDTO::getUsername).collect(Collectors.toList());
 }
