@@ -4,9 +4,12 @@ import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.converter.UserConverter;
 import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.model.User;
+import com.gucardev.springboottest.model.projection.MailUserNameProjection;
+import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
 import com.gucardev.springboottest.repository.UserRepository;
 import com.gucardev.springboottest.service.UserService;
 import com.gucardev.springboottest.spesification.UserSpecifications;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -70,5 +73,15 @@ public class UserServiceImpl implements UserService {
       throw new RuntimeException("user does not exists!");
     }
     userRepository.deleteById(id);
+  }
+
+  @Override
+  public List<UsernameLengthProjection> getUserNamesListWithLengthGreaterThan(Integer length) {
+    return userRepository.getUserNamesListWithLengthGreaterThan(length);
+  }
+
+  @Override
+  public List<MailUserNameProjection> getMailAndUsernames() {
+    return userRepository.findAllMailAndUserName();
   }
 }

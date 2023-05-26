@@ -2,7 +2,10 @@ package com.gucardev.springboottest.controller;
 
 import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.request.UserRequest;
+import com.gucardev.springboottest.model.projection.MailUserNameProjection;
+import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
 import com.gucardev.springboottest.service.UserService;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,5 +63,15 @@ public class UserController {
   public ResponseEntity<UserDTO> updateUser(@PathVariable Long id) {
     userService.delete(id);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/mail-username")
+  public ResponseEntity<List<MailUserNameProjection>> getMailAndUsernames() {
+    return ResponseEntity.ok(userService.getMailAndUsernames());
+  }
+
+  @GetMapping("/username-length/{length}")
+  public ResponseEntity<List<UsernameLengthProjection>> getById(@PathVariable Integer length) {
+    return ResponseEntity.ok(userService.getUserNamesListWithLengthGreaterThan(length));
   }
 }
