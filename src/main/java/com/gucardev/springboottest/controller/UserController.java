@@ -4,7 +4,6 @@ import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.model.projection.MailUserNameProjection;
 import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
-import com.gucardev.springboottest.remote.RemoteUserClient;
 import com.gucardev.springboottest.service.UserService;
 import java.util.List;
 import javax.validation.Valid;
@@ -35,13 +34,13 @@ public class UserController {
   }
 
   @GetMapping
-  public ResponseEntity<Page<UserDTO>> searchUsers(
+  public ResponseEntity<Page<UserDTO>> getAllPageable(
       @RequestParam(required = false) String searchTerm,
       @RequestParam(defaultValue = "name", required = false) String sortField,
       @RequestParam(defaultValue = "ASC", required = false) String sortDirection,
       @PageableDefault(size = 20) Pageable pageable) {
     Sort.Direction direction = Sort.Direction.fromString(sortDirection.toUpperCase());
-    Page<UserDTO> result = userService.findAll(searchTerm, sortField, direction, pageable);
+    Page<UserDTO> result = userService.getAllPageable(searchTerm, sortField, direction, pageable);
     return ResponseEntity.ok(result);
   }
 

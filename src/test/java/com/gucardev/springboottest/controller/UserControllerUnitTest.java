@@ -32,12 +32,12 @@ class UserControllerUnitTest {
   }
 
   @Test
-  void searchUsers_givenSortFieldAndSortDirection_returnsUsers() {
+  void getAllPageable_givenSortFieldAndSortDirection_returnsUsers() {
     Pageable pageable = PageRequest.of(0, 20);
     Page<UserDTO> userDTOPage = Page.empty(pageable);
-    when(userService.findAll(any(), any(), any(), any())).thenReturn(userDTOPage);
+    when(userService.getAllPageable(any(), any(), any(), any())).thenReturn(userDTOPage);
     ResponseEntity<Page<UserDTO>> response =
-        userController.searchUsers("searchTerm", "name", "ASC", pageable);
+        userController.getAllPageable("searchTerm", "name", "ASC", pageable);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(userDTOPage, response.getBody());
   }

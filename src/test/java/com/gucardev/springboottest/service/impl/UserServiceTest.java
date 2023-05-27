@@ -56,8 +56,8 @@ class UserServiceTest extends UserServiceTestSupport {
   }
 
   @Test
-  @DisplayName("findAll returns all users with pagination")
-  void findAll_givenPageable_returnUsers() {
+  @DisplayName("getAllPageable returns all users with pagination")
+  void getAllPageable_givenPageable_returnUsers() {
     Page<User> usersPage = new PageImpl<>(Arrays.asList(user1, user2));
 
     when(userRepository.findAll(any(Specification.class), any(Pageable.class)))
@@ -66,7 +66,7 @@ class UserServiceTest extends UserServiceTestSupport {
     when(userConverter.mapToDTO(user2)).thenReturn(userDto2);
 
     Pageable pageable = PageRequest.of(0, 5);
-    Page<UserDTO> result = userService.findAll("", "name", Sort.Direction.ASC, pageable);
+    Page<UserDTO> result = userService.getAllPageable("", "name", Sort.Direction.ASC, pageable);
 
     assertEquals(2, result.getTotalElements());
     assertEquals(1, result.getTotalPages());

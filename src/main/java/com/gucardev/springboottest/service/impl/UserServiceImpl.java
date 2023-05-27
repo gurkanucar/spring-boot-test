@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Page<UserDTO> findAll(
+  public Page<UserDTO> getAllPageable(
       String searchTerm, String sortField, Sort.Direction sortDirection, Pageable pageable) {
     Specification<User> spec =
         Specification.where(UserSpecifications.searchByKeyword(searchTerm))

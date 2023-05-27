@@ -12,7 +12,7 @@ import org.springframework.data.domain.Sort;
 
 public interface UserService {
 
-  Page<UserDTO> findAll(
+  Page<UserDTO> getAllPageable(
       String searchTerm, String sortField, Sort.Direction sortDirection, Pageable pageable);
 
   User getById(Long id);
