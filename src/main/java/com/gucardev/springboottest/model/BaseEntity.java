@@ -19,16 +19,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor
 @SuperBuilder
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @CreationTimestamp
-  private OffsetDateTime dateCreated;
+  @CreationTimestamp private OffsetDateTime dateCreated;
 
-  @UpdateTimestamp
-  private OffsetDateTime lastUpdated;
-
+  @UpdateTimestamp private OffsetDateTime lastUpdated;
 }
