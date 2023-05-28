@@ -23,12 +23,12 @@ class UserRequestTest {
     "1, testUsername, test@mail.com, testName, false",
     "2, ab, test@mail.com, testName, true",
     "3, testUsername, invalidEmail, testName, true",
-    "4, testUsername, test@mail.com, '', true",
-    "'', testUsername, test@mail.com, testName, false",
-    "'',testUsernameToooooooooooooooooooooooooooooLong, test@mail.com, testName, true",
-    "'', '', test@mail.com, testName, true",
-    "'', testUsername, '', testName, true",
-    "'', testUsername, test@mail.com, ' ', true"
+    "4, testUsername, test@mail.com, , true",
+    " , testUsername, test@mail.com, testName, false",
+    " ,testUsernameToooooooooooooooooooooooooooooLong, test@mail.com, testName, true",
+    " , , test@mail.com, testName, true",
+    " , testUsername, , testName, true",
+    " , testUsername, test@mail.com,  , true"
   })
   void testUserRequest(
       String idInput, String username, String email, String name, boolean hasViolations) {

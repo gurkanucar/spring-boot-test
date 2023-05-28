@@ -91,8 +91,8 @@ class UserServiceTest extends UserServiceTestSupport {
 
   @Test
   void getByIdDTO_givenExistingId_returnUserDTO() {
-    // doReturn(userDto1).when(userService).getByIdDTO(any()); // if you use spy, you can comment
-    // code below and uncomment this. Because getByIdDTO is a another method inside in test class
+    // doReturn(existingUser).when(userService).getById(any()); // if you use spy, you can comment
+    // code below and uncomment this. Because getById is a another method inside same test class
     when(userRepository.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
     when(userConverter.mapToDTO(existingUser)).thenReturn(userDto1);
