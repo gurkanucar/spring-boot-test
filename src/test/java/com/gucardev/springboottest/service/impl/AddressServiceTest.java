@@ -140,7 +140,7 @@ class AddressServiceTest extends AddressServiceTestSupport {
   }
 
   @Test
-  void testClearCache() {
+  void clearCache_givenNothing_returnNothing() {
     Logger logger = (Logger) LoggerFactory.getLogger(AddressServiceImpl.class);
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
     listAppender.start();
