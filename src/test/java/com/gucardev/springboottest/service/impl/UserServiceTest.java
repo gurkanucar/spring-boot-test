@@ -25,6 +25,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.BeanUtils;
@@ -223,5 +225,15 @@ class UserServiceTest extends UserServiceTestSupport {
     assertEquals(1, differentUsers.size());
     assertEquals(userDto3, differentUsers.get(0));
     verify(userConverter, times(differentUsers.size())).mapToDTO(any(User.class));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"1,true", "2,false"})
+  void userExistsById_givenUserId_returnBoolean(Long id, Boolean isPresent) {
+    Optional<User> optionalUser = isPresent ? Optional.of(new User()) : Optional.empty();
+
+    when(userRepository.findById(id)).thenReturn(optionalUser);
+    Boolean actual = userService.userExistsById(id);
+    assertEquals(isPresent, actual);
   }
 }
