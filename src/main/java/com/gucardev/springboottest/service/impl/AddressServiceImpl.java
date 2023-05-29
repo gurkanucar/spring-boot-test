@@ -40,10 +40,7 @@ public class AddressServiceImpl implements AddressService {
 
   @Override
   public AddressDTO getByIdDTO(Long id) {
-    return addressRepository
-        .findById(id)
-        .map(addressConverter::mapToDTO)
-        .orElseThrow(() -> new RuntimeException("address not found!"));
+    return addressConverter.mapToDTO(getById(id));
   }
 
   @Override
