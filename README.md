@@ -5,6 +5,8 @@
 - dto converter
 - entity getter/setter
 - filter/pagination/sorting specification tests
+- rate limiter
+- scheduler
 - wiremock
 
 ### how to run all tests
