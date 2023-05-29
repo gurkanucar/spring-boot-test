@@ -10,6 +10,7 @@ import com.gucardev.springboottest.dto.RestPageResponse;
 import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.request.UserRequest;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -33,6 +34,25 @@ class UserControllerUserControllerIntegrationTest extends UserControllerIntegrat
     RestPageResponse<UserDTO> userDTOS =
         objectMapper.readValue(content, new TypeReference<RestPageResponse<UserDTO>>() {});
     assertEquals(userDTOS.getContent().get(0).getUsername(), "username1");
+  }
+
+  @Test
+  void getMailAndUsernames_returnsMailAndUsernamesWithRateLimiter() throws Exception {
+    for (int i = 0; i < 2; i++) {
+      mockMvc
+          .perform(MockMvcRequestBuilders.get("/api/user/mail-username"))
+          .andExpect(status().isOk());
+    }
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/api/user/mail-username"))
+        .andExpect(status().isTooManyRequests());
+
+    TimeUnit.SECONDS.sleep(10);
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/api/user/mail-username"))
+        .andExpect(status().isOk());
   }
 
   @Test
