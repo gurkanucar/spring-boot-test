@@ -8,7 +8,6 @@ import com.gucardev.springboottest.repository.AddressRepository;
 import com.gucardev.springboottest.service.AddressService;
 import com.gucardev.springboottest.service.UserService;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -62,14 +61,7 @@ public class AddressServiceImpl implements AddressService {
 
   @Override
   public AddressDTO update(AddressRequest addressRequest) {
-    if (!Optional.ofNullable(addressRequest.getId()).isPresent()) {
-      throw new RuntimeException("address not found!");
-    }
-
-    Address existing = addressRepository.findById(addressRequest.getId()).orElse(null);
-    if (!Optional.ofNullable(existing).isPresent()) {
-      throw new RuntimeException("address not found!");
-    }
+    Address existing = getById(addressRequest.getId());
     existing.setTitle(addressRequest.getTitle());
     existing.setDetail(addressRequest.getDetail());
     return addressConverter.mapToDTO(addressRepository.save(existing));
@@ -77,9 +69,7 @@ public class AddressServiceImpl implements AddressService {
 
   @Override
   public void delete(Long id) {
-    if (!addressRepository.findById(id).isPresent()) {
-      throw new RuntimeException("address not found!");
-    }
-    addressRepository.deleteById(id);
+    Address existing = getById(id);
+    addressRepository.delete(existing);
   }
 }
