@@ -9,9 +9,17 @@ import com.gucardev.springboottest.service.AddressService;
 import com.gucardev.springboottest.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
+@CacheConfig(cacheNames = {"address"})
+@Slf4j
 public class AddressServiceImpl implements AddressService {
 
   private final AddressRepository addressRepository;
@@ -27,7 +35,16 @@ public class AddressServiceImpl implements AddressService {
     this.addressConverter = addressConverter;
   }
 
+  /** Clear cache. */
+  @CacheEvict(allEntries = true)
+  @PostConstruct
+  @Scheduled(fixedRateString = "${caching.config.address.cache-ttl}")
+  public void clearCache() {
+    log.info("Caches are cleared");
+  }
+
   @Override
+  @Cacheable(key = "#id")
   public List<AddressDTO> getAllByUserId(Long id) {
     if (!userService.userExistsById(id)) {
       throw new RuntimeException("user not found!");
@@ -38,6 +55,7 @@ public class AddressServiceImpl implements AddressService {
   }
 
   @Override
+  @Cacheable(key = "#id")
   public AddressDTO getByIdDTO(Long id) {
     return addressConverter.mapToDTO(getById(id));
   }
