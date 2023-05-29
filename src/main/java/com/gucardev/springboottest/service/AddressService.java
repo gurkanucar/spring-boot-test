@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AddressService {
 
-  List<AddressDTO> getAll();
+  List<AddressDTO> getAllByUserId(Long id);
 
   AddressDTO getByIdDTO(Long id);
 

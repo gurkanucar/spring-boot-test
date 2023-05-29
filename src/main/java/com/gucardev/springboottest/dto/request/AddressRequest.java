@@ -15,11 +15,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AddressRequest {
 
-
   private Long id;
 
   @NotBlank private String title;
 
   private String detail;
-  @NotNull private Long user;
+  @NotNull private Long userId;
 }
