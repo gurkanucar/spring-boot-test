@@ -5,6 +5,7 @@ import com.gucardev.springboottest.dto.request.UserRequest;
 import com.gucardev.springboottest.model.projection.MailUserNameProjection;
 import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
 import com.gucardev.springboottest.service.UserService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -44,6 +45,12 @@ public class UserController {
     return ResponseEntity.ok(result);
   }
 
+  @RateLimiter(name = "basic")
+  @GetMapping("/mail-username")
+  public ResponseEntity<List<MailUserNameProjection>> getMailAndUsernames() {
+    return ResponseEntity.ok(userService.getMailAndUsernames());
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<UserDTO> getById(@PathVariable Long id) {
     return ResponseEntity.ok(userService.getByIdDTO(id));
@@ -68,11 +75,6 @@ public class UserController {
   @GetMapping("/different-users")
   public ResponseEntity<List<UserDTO>> differentUsers() {
     return ResponseEntity.ok(userService.getDifferentUsers());
-  }
-
-  @GetMapping("/mail-username")
-  public ResponseEntity<List<MailUserNameProjection>> getMailAndUsernames() {
-    return ResponseEntity.ok(userService.getMailAndUsernames());
   }
 
   @GetMapping("/username-length/{length}")

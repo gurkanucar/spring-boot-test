@@ -15,3 +15,11 @@ caching:
 address:
   controller:
     enabled: 'true'
+
+resilience4j:
+  ratelimiter:
+    instances:
+      basic:
+        limit-for-period: 3
+        limit-refresh-period: 1m
+        timeout-duration: 5s
