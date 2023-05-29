@@ -81,6 +81,28 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+      <version>2.4.1</version>
+    </dependency>
+    
+    <!-- Spring Boot AOP Dependency -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aop</artifactId>
+      <version>2.4.1</version>
+    </dependency>
+
+    <!-- Resilience4j Dependency -->
+    <dependency>
+      <groupId>io.github.resilience4j</groupId>
+      <artifactId>resilience4j-spring-boot2</artifactId>
+      <version>1.7.0</version>
+    </dependency>
+
+
   </dependencies>
 
   <dependencyManagement>
