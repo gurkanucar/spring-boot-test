@@ -97,5 +97,40 @@ class AddressServiceImplTest extends AddressServiceTestSupport {
     }
   }
 
+  @Test
+  void create_givenAddressRequest_ReturnAddressDTO() {
+    when(userService.userExistsById(any())).thenReturn(true);
+    when(addressConverter.mapToEntity(addressRequest)).thenReturn(address1);
 
+    when(addressRepository.save(address1)).thenReturn(address1);
+    when(addressConverter.mapToDTO(address1)).thenReturn(addressDto1);
+
+    AddressDTO actual = addressService.create(addressRequest);
+
+    assertEquals(addressDto1, actual);
+  }
+
+  @Test
+  void update_givenAddressRequest_ReturnAddressDTO() {
+    doReturn(address1).when(addressService).getById(any());
+    when(addressConverter.mapToDTO(any(Address.class))).thenReturn(updatedAddressDto);
+    when(addressRepository.save(any(Address.class))).thenReturn(updatedAddress);
+
+    AddressDTO actual = addressService.update(addressRequest);
+
+    assertEquals(updatedAddressDto, actual);
+  }
+
+  @Test
+  void update_givenNonExistentAddressRequest_ThrowException() {
+    doThrow(new RuntimeException()).when(addressService).getById(any());
+    assertThrows(RuntimeException.class, () -> addressService.update(addressRequest));
+  }
+
+  @Test
+  void delete_givenIdExists_delete() {
+    doReturn(address1).when(addressService).getById(address1.getId());
+    addressService.delete(address1.getId());
+    verify(addressRepository).delete(address1);
+  }
 }
