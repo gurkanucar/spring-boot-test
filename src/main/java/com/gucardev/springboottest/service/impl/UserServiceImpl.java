@@ -48,6 +48,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public Boolean userExistsById(Long id) {
+    return userRepository.findById(id).isPresent();
+  }
+
+  @Override
   public UserDTO getByIdDTO(Long id) {
     return userConverter.mapToDTO(getById(id));
   }

@@ -17,6 +17,8 @@ public interface UserService {
 
   User getById(Long id);
 
+  Boolean userExistsById(Long id);
+
   UserDTO getByIdDTO(Long id);
 
   UserDTO create(UserRequest userRequest);
