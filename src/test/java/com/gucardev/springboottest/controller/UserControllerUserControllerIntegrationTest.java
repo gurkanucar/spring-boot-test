@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-class UserControllerIntegrationTest extends IntegrationTestSupport {
+class UserControllerUserControllerIntegrationTest extends UserControllerIntegrationTestSupport {
 
   @Test
   void searchUsers_givenSortFieldAndSortDirection_returnsUsers() throws Exception {

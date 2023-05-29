@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public abstract class IntegrationTestSupport {
+abstract class UserControllerIntegrationTestSupport {
 
   WireMockServer wireMockServer = new WireMockServer(3000);
 
