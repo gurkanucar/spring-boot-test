@@ -11,6 +11,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import com.gucardev.springboottest.dto.AddressDTO;
 import com.gucardev.springboottest.dto.converter.AddressConverter;
 import com.gucardev.springboottest.model.Address;
@@ -27,9 +31,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.LoggerFactory;
 
 @ExtendWith(MockitoExtension.class)
-class AddressServiceImplTest extends AddressServiceTestSupport {
+class AddressServiceTest extends AddressServiceTestSupport {
 
   @Mock private AddressRepository addressRepository;
   @Mock private AddressConverter addressConverter;
@@ -132,5 +137,20 @@ class AddressServiceImplTest extends AddressServiceTestSupport {
     doReturn(address1).when(addressService).getById(address1.getId());
     addressService.delete(address1.getId());
     verify(addressRepository).delete(address1);
+  }
+
+  @Test
+  void testClearCache() {
+    Logger logger = (Logger) LoggerFactory.getLogger(AddressServiceImpl.class);
+    ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+    listAppender.start();
+    logger.addAppender(listAppender);
+
+    addressService.clearCache();
+
+    List<ILoggingEvent> logsList = listAppender.list;
+
+    assertEquals("Caches are cleared", logsList.get(0).getMessage());
+    assertEquals(Level.INFO, logsList.get(0).getLevel());
   }
 }
