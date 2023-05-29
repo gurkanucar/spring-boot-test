@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@ConditionalOnExpression("${address.controller.enabled:false}") // address controller disabled for now
+@ConditionalOnExpression(
+    "${address.controller.enabled:false}")
 @RestController
 @RequestMapping("/api/address")
 public class AddressController {
@@ -28,9 +29,9 @@ public class AddressController {
     this.addressService = addressService;
   }
 
-  @GetMapping
-  public ResponseEntity<List<AddressDTO>> getAll() {
-    List<AddressDTO> result = addressService.getAll();
+  @GetMapping("/user/{id}")
+  public ResponseEntity<List<AddressDTO>> getAll(@PathVariable Long id) {
+    List<AddressDTO> result = addressService.getAllByUserId(id);
     return ResponseEntity.ok(result);
   }
 
@@ -40,17 +41,17 @@ public class AddressController {
   }
 
   @PostMapping
-  public ResponseEntity<AddressDTO> createUser(@RequestBody @Valid AddressRequest addressRequest) {
+  public ResponseEntity<AddressDTO> createAddress(@RequestBody @Valid AddressRequest addressRequest) {
     return ResponseEntity.status(HttpStatus.CREATED).body(addressService.create(addressRequest));
   }
 
   @PutMapping
-  public ResponseEntity<AddressDTO> updateUser(@RequestBody @Valid AddressRequest addressRequest) {
+  public ResponseEntity<AddressDTO> updateAddress(@RequestBody @Valid AddressRequest addressRequest) {
     return ResponseEntity.ok(addressService.update(addressRequest));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<AddressDTO> updateUser(@PathVariable Long id) {
+  public ResponseEntity<AddressDTO> deleteAddress(@PathVariable Long id) {
     addressService.delete(id);
     return ResponseEntity.ok().build();
   }
