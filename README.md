@@ -273,7 +273,7 @@ WireMockServer wireMockServer=new WireMockServer(3000);
 
 [https://laurspilca.com/using-wiremock-for-integration-tests-in-spring-apps/](https://laurspilca.com/using-wiremock-for-integration-tests-in-spring-apps/)
 
-
+[https://www.baeldung.com/spring-data-testing-cacheable](https://www.baeldung.com/spring-data-testing-cacheable)
 
 
 
