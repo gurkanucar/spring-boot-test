@@ -3,6 +3,7 @@ package com.gucardev.springboottest.service.impl;
 import com.gucardev.springboottest.dto.UserDTO;
 import com.gucardev.springboottest.dto.converter.UserConverter;
 import com.gucardev.springboottest.dto.request.UserRequest;
+import com.gucardev.springboottest.exception.NotFoundException;
 import com.gucardev.springboottest.model.User;
 import com.gucardev.springboottest.model.projection.MailUserNameProjection;
 import com.gucardev.springboottest.model.projection.UsernameLengthProjection;
@@ -44,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User getById(Long id) {
-    return userRepository.findById(id).orElseThrow(() -> new RuntimeException("not found!"));
+    return userRepository.findById(id).orElseThrow(() -> new NotFoundException("not found!"));
   }
 
   @Override
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDTO create(UserRequest userRequest) {
     if (userRepository.existsByUsernameIgnoreCase(userRequest.getUsername())) {
-      throw new RuntimeException("user already exists!");
+      throw new NotFoundException("user already exists!");
     }
     User saved = userRepository.save(userConverter.mapToEntity(userRequest));
     return userConverter.mapToDTO(saved);
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDTO update(UserRequest userRequest) {
     if (!userRepository.existsById(userRequest.getId())) {
-      throw new RuntimeException("user does not exists!");
+      throw new NotFoundException("user does not exists!");
     }
     User existing = getById(userRequest.getId());
     existing.setEmail(userRequest.getEmail());
@@ -81,7 +82,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public void delete(Long id) {
     if (!userRepository.existsById(id)) {
-      throw new RuntimeException("user does not exists!");
+      throw new NotFoundException("user does not exists!");
     }
     userRepository.deleteById(id);
   }

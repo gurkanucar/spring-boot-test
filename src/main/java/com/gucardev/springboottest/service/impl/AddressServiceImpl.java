@@ -3,6 +3,7 @@ package com.gucardev.springboottest.service.impl;
 import com.gucardev.springboottest.dto.AddressDTO;
 import com.gucardev.springboottest.dto.converter.AddressConverter;
 import com.gucardev.springboottest.dto.request.AddressRequest;
+import com.gucardev.springboottest.exception.NotFoundException;
 import com.gucardev.springboottest.model.Address;
 import com.gucardev.springboottest.repository.AddressRepository;
 import com.gucardev.springboottest.service.AddressService;
@@ -46,8 +47,8 @@ public class AddressServiceImpl implements AddressService {
   @Override
   @Cacheable(key = "#id")
   public List<AddressDTO> getAllByUserId(Long id) {
-    if (!userService.userExistsById(id)) {
-      throw new RuntimeException("user not found!");
+    if (Boolean.FALSE.equals(userService.userExistsById(id))) {
+      throw new NotFoundException("user not found!");
     }
     return addressRepository.findAllByUser_Id(id).stream()
         .map(addressConverter::mapToDTO)
@@ -64,13 +65,13 @@ public class AddressServiceImpl implements AddressService {
   public Address getById(Long id) {
     return addressRepository
         .findById(id)
-        .orElseThrow(() -> new RuntimeException("address not found!"));
+        .orElseThrow(() -> new NotFoundException("address not found!"));
   }
 
   @Override
   public AddressDTO create(AddressRequest addressRequest) {
-    if (!userService.userExistsById(addressRequest.getUserId())) {
-      throw new RuntimeException("user not found!");
+    if (Boolean.FALSE.equals(userService.userExistsById(addressRequest.getUserId()))) {
+      throw new NotFoundException("user not found!");
     }
     Address address = addressConverter.mapToEntity(addressRequest);
 
